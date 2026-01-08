@@ -1,0 +1,62 @@
+<app-navbar></app-navbar>
+
+<div class="mt-18 p-5">
+  <h2 class="text-3xl font-bold">Wel-Come {{ UserName }}</h2>
+</div>
+
+<div class="w-full p-5">
+  <div class="bg-[#101829] w-full h-32 rounded-lg flex flex-row">
+    <div
+      class="flex-1 align-center p-5 border-r border-[#272f3d] rounded-tl-lg rounded-bl-lg text-[#99a1b0]"
+    >
+      <b>Number of Categories</b>
+      <h1 style="font-size: x-large" class="text-white"><b>{{ categoryCount }}</b></h1>
+    </div>
+
+    <div class="flex-1 p-5 border-r border-[#272f3d] text-[#99a1b0]">
+      <b>Number of Products</b>
+      <h1 style="font-size: x-large" class="text-white"><b>25</b></h1>
+    </div>
+
+    <div class="flex-1 p-5 rounded-tr-lg rounded-br-lg text-[#99a1b0]">
+      <b>Number of Users</b>
+      <h1 style="font-size: x-large" class="text-white"><b>{{ totalCount }}</b></h1>
+    </div>
+  </div>
+</div>
+
+<div class="p-5">
+  <h2 class="h-15 p-3 rounded-lg text-2xl bg-[#101829] text-white">ALL USERS</h2>
+</div>
+
+<div class="p-5">
+  <table *ngIf="!loading && users.length > 0" class="w-full text-sm text-left rtl:text-right text-body">
+    <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default">
+      <tr>
+        <th scope="col" class="px-6 py-3 font-medium">User Name</th>
+        <th scope="col" class="px-6 py-3 font-medium">User Email</th>
+        <th scope="col" class="px-6 py-3 font-medium">User Role</th>
+        <th scope="col" class="px-6 py-3 font-medium">User Profile</th>
+        <th scope="col" class="px-6 py-3 font-medium">Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users" class="bg-neutral-primary border-b border-default">
+        <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+          {{ user.user_name }}
+        </th>
+        <td class="px-6 py-4">{{ user.user_email }}</td>
+        <td class="px-6 py-4">{{ user.user_role }}</td>
+        <td class="px-6 py-4">
+          <img *ngIf="user.profile_image"
+          [src]="'http://127.0.0.1:8000/images/' + user.profile_image"
+          width="50" />
+        </td>
+        <td class="px-6 py-4">{{ user.created_at | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+</div>
+
+<router-outlet></router-outlet>

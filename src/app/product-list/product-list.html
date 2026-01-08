@@ -1,0 +1,92 @@
+<app-navbar></app-navbar>
+
+<div class="p-5 mt-12">
+  <div class="w-full p-5 flex justify-between">
+    <!-- button to add new category -->
+     <h2 class="text-3xl font-bold">Product List</h2>
+    <a routerLink="/productForm">
+      <button
+        class="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-base uppercase text-black rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden"
+      >
+        <span class="relative z-20">ADD PRODUCT</span>
+
+        <span
+          class="absolute left-[-75%] top-0 h-full w-[50%] bg-[#6366f2] rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out"
+        ></span>
+
+        <span
+          class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute h-[20%] rounded-tl-lg border-l-2 border-t-2 top-0 left-0"
+        ></span>
+        <span
+          class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute group-hover:h-[90%] h-[60%] rounded-tr-lg border-r-2 border-t-2 top-0 right-0"
+        ></span>
+        <span
+          class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute h-[60%] group-hover:h-[90%] rounded-bl-lg border-l-2 border-b-2 left-0 bottom-0"
+        ></span>
+        <span
+          class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute h-[20%] rounded-br-lg border-r-2 border-b-2 right-0 bottom-0"
+        ></span>
+      </button>
+    </a>
+  </div>
+
+  
+
+  <div
+    class="rounded relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default"
+  >
+    <table 
+    *ngIf="!loading && products.length > 0"
+    class="w-full text-sm text-left rtl:text-right text-body">
+      <thead
+        class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3 font-medium">Product Name</th>
+          <th scope="col" class="px-6 py-3 font-medium">Product Description</th>
+          <th scope="col" class="px-6 py-3 font-medium">Product Price</th>
+          <th scope="col" class="px-6 py-3 font-medium">Product Image</th>
+          <th scope="col" class="px-6 py-3 font-medium">Product Category</th>
+          <th scope="col" class="px-6 py-3 font-medium">Product Company</th>
+          <th scope="col" class="px-6 py-3 font-medium text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr 
+        *ngFor="let product of products"
+        class="bg-neutral-primary border-b border-default">
+          <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+            {{ product.product_name }}
+          </th>
+          <td class="px-6 py-4">{{ product.product_description }}</td>
+          <td class="px-6 py-4">{{ product.product_price }}</td>
+          <td class="px-6 py-4">
+            <img *ngIf="product.product_image"
+            [src]="'http://127.0.0.1:8000/images/' + product.product_image"
+            width="50" />
+          </td>
+          <td class="px-6 py-4">{{ product.product_category }}</td>
+          <td class="px-6 py-4">{{ product.product_company }}</td>
+          <td class="px-6 py-4 flex row justify-around">
+            <button
+              (click)="editProduct(product.id)"
+              class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-green-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
+            >
+              EDIT
+            </button>
+           
+            <button
+              (click)="deleteProduct(product.id)"
+              class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-red-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
+            >
+              DELETE
+            </button>
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

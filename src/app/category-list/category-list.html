@@ -1,0 +1,141 @@
+<app-navbar></app-navbar>
+
+<div class="p-5 mt-12">
+  <div class="w-full p-5 flex justify-between">
+    <!-- button to add new category -->
+    <h2 class="text-3xl font-bold">Category List</h2>
+    <button
+      (click)="toggleDiv()"
+      class="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-base uppercase text-black rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden"
+    >
+      <span class="relative z-20">ADD CATEGORY</span>
+
+      <span
+        class="absolute left-[-75%] top-0 h-full w-[50%] bg-[#6366f2] rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out"
+      ></span>
+
+      <span
+        class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute h-[20%] rounded-tl-lg border-l-2 border-t-2 top-0 left-0"
+      ></span>
+      <span
+        class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute group-hover:h-[90%] h-[60%] rounded-tr-lg border-r-2 border-t-2 top-0 right-0"
+      ></span>
+      <span
+        class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute h-[60%] group-hover:h-[90%] rounded-bl-lg border-l-2 border-b-2 left-0 bottom-0"
+      ></span>
+      <span
+        class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-black absolute h-[20%] rounded-br-lg border-r-2 border-b-2 right-0 bottom-0"
+      ></span>
+    </button>
+  </div>
+
+  @if(display){
+
+  <dialog
+    class="z-5 h-70 w-full bg-transparent flex items-center justify-center backdrop-blur-xs"
+    #myDialog
+  >
+    <form
+      #registerForm="ngForm"
+      (ngSubmit)="submit(registerForm)"
+      class="text-neutral-800 py-6 relative overflow-hidden flex flex-col justify-around w-110 h-70 border border-neutral-500 rounded-lg bg-neutral-50 p-3 px-6"
+    >
+      <div
+        class="before:absolute before:w-32 before:h-20 before:right-2 before:bg-rose-300 before:-z-10 before:rounded-full before:blur-xl before:-top-12 z-10 after:absolute after:w-24 after:h-24 after:bg-purple-300 after:-z-10 after:rounded-full after:blur after:-top-12 after:-right-6"
+      >
+        <span class="font-extrabold text-2xl text-violet-600">ADD Category</span>
+        <p class="text-neutral-700">Add category here</p>
+      </div>
+
+      <div class="flex flex-col gap-4 mt-4">
+        <div
+          class="relative rounded-lg w-full overflow-hidden before:absolute before:w-12 before:h-12 before:right-0 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content[''] after:bg-rose-300 after:right-12 after:top-3 after:rounded-full after:blur-lg"
+        >
+          <input
+            type="text"
+            name="category_name"
+            [(ngModel)]="category.category_name"
+            class="relative bg-transparent ring-0 outline-none border border-neutral-500 text-neutral-900 placeholder-violet-700 text-sm rounded-lg focus:ring-violet-500 placeholder-opacity-60 focus:border-violet-500 block w-full p-2.5"
+            placeholder="Category name"
+          />
+        </div>
+        <div
+          class="relative rounded-lg w-full overflow-hidden before:absolute before:w-12 before:h-12 before:right-0 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content[''] after:bg-rose-300 after:right-12 after:top-3 after:rounded-full after:blur-lg"
+        >
+          <textarea
+            name="category_details"
+            rows="2"
+            cols="50"
+            [(ngModel)]="category.category_details"
+            class="relative bg-transparent ring-0 outline-none border border-neutral-500 text-neutral-900 placeholder-violet-700 text-sm rounded-lg focus:ring-violet-500 placeholder-opacity-60 focus:border-violet-500 block w-full p-2.5"
+          >
+        Category description here
+        </textarea
+          >
+        </div>
+        <div class="flex justify-end gap-2">
+          <button
+            type="submit"
+            class="bg-violet-500 text-neutral-50 px-4 py-2 rounded-lg hover:bg-violet-400 transition"
+          >
+            ADD CATEGORY
+          </button>
+
+          <button
+            type="button"
+            (click)="hideDiv()"
+            class="bg-gray-400 text-neutral-50 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  }
+
+  <div
+    class="rounded relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default"
+  >
+    <table
+      *ngIf="!loading && categories.length > 0"
+      class="w-full text-sm text-left rtl:text-right text-body"
+    >
+      <thead
+        class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3 font-medium">Category Name</th>
+          <th scope="col" class="px-6 py-3 font-medium">Category Details</th>
+          <th scope="col" class="px-6 py-3 font-medium">Created At</th>
+          <th scope="col" class="px-6 py-3 font-medium text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories" class="bg-neutral-primary border-b border-default">
+          <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+            {{ category.category_name }}
+          </th>
+          <td class="px-6 py-4">{{ category.category_details }}</td>
+          <td class="px-6 py-4">{{ category.created_at | date : 'short' }}</td>
+          <td class="px-6 py-4 flex row justify-around">
+            <button
+              class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-green-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
+            >
+              EDIT
+            </button>
+           
+            <button
+              class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-red-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
+            >
+              DELETE
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
