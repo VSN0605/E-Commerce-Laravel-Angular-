@@ -32,7 +32,7 @@
   @if(display){
 
   <dialog
-    class="z-5 h-70 w-full bg-transparent flex items-center justify-center backdrop-blur-xs"
+    class="z-5 h-screen w-full bg-transparent flex  justify-center backdrop-blur-xs"
     #myDialog
   >
     <form
@@ -40,6 +40,7 @@
       (ngSubmit)="submit(registerForm)"
       class="text-neutral-800 py-6 relative overflow-hidden flex flex-col justify-around w-110 h-70 border border-neutral-500 rounded-lg bg-neutral-50 p-3 px-6"
     >
+      <input type="hidden" name="userRole" value="{{ userRole }}">
       <div
         class="before:absolute before:w-32 before:h-20 before:right-2 before:bg-rose-300 before:-z-10 before:rounded-full before:blur-xl before:-top-12 z-10 after:absolute after:w-24 after:h-24 after:bg-purple-300 after:-z-10 after:rounded-full after:blur after:-top-12 after:-right-6"
       >
@@ -78,7 +79,7 @@
             type="submit"
             class="bg-violet-500 text-neutral-50 px-4 py-2 rounded-lg hover:bg-violet-400 transition"
           >
-            ADD CATEGORY
+           ADD CATEGORY
           </button>
 
           <button
@@ -121,6 +122,7 @@
           <td class="px-6 py-4">{{ category.created_at | date : 'short' }}</td>
           <td class="px-6 py-4 flex row justify-around">
             <button
+              (click)="editCategory(category.id)"
               class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-green-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
             >
               EDIT

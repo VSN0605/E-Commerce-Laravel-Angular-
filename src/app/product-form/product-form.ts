@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Navbar } from '../navbar/navbar';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
@@ -20,21 +20,45 @@ export class ProductForm {
   };
 
   selectedFile! : File | null;
-  isEditMode : boolean = false;
-  userId! : number;
+  isEditMode = false;
+  productId! : number;
 
   constructor(
     private http : HttpClient, 
     private router: Router,
-    // private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
   ) {}
 
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
 
+      if (id) {
+        this.productId = +id;
+        this.isEditMode = true;
+        this.getProductById();
+        
+      }
+    });
+  }
 
-  onFileChange(event: any) {
-    const input = event.target as HTMLInputElement;
-    if(input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+  getProductById() {
+    this.http.get<any>(`http://127.0.0.1:8000/api/product/${this.productId}`)
+    .subscribe(res => {
+      this.product.product_name = res.product_name;
+      this.product.product_description = res.product_description;
+      this.product.product_price = res.product_price;
+      this.product.product_category = res.product_category;
+      this.product.product_company = res.product_company;
+      this.cdr.detectChanges();
+    });
+    
+  }
+
+  onFileChange(event:any) {
+    if(event.target.files?.length) {
+      this.selectedFile = event.target.files[0];
     }
   }
 
@@ -48,23 +72,27 @@ export class ProductForm {
     
     console.log(formData);
     
-    if(this.selectedFile) {
+     if (this.selectedFile) {
       formData.append('product_image', this.selectedFile);
     }
 
-    this.http.post('http://127.0.0.1:8000/api/product', formData)
-      .subscribe({
+    // to create and update product
+    const request = this.isEditMode
+    ? this.http.post(
+        `http://127.0.0.1:8000/api/product/${this.productId}?_method=PUT`,
+        formData
+      )
+    : this.http.post(
+        'http://127.0.0.1:8000/api/product',
+        formData
+      );
 
-        next: () => {
-          form.resetForm();
-          this.selectedFile = null;
-          alert('Product Added Successfully');
-
-          this.router.navigate(['/productList']);
-        },
-        error: err => {
-          console.log(err);
-        }
-      });
+    request.subscribe({
+      next: () => {
+        alert(this.isEditMode ? 'Product updated successfully' : 'Product added successfully');
+        this.router.navigate(['/productList']);
+      },
+      error: err => console.log(err)
+    });
   }
 }

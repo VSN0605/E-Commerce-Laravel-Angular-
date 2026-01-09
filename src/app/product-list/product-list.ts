@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Navbar } from '../navbar/navbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './product-list.css',
 })
 export class ProductList {
-  constructor(private http : HttpClient, private router: Router) {}
+  constructor(private http : HttpClient, private router: Router, private cdr: ChangeDetectorRef) {}
 
   products: any[] = [];
   loading = true;
@@ -28,6 +28,7 @@ export class ProductList {
         next: res => {
           this.products = res;
           this.loading = false;
+          this.cdr.detectChanges();
         },
         error: err => {
           console.log(err);

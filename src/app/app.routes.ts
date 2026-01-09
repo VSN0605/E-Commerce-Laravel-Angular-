@@ -16,5 +16,6 @@ export const routes: Routes = [
     { path: 'categoryList', component: CategoryList, canActivate: [authGuard] },
     { path: 'productList', component: ProductList, canActivate: [authGuard] },
     { path: 'productForm', component: ProductForm, canActivate: [authGuard] },
-    { path: 'productForm/:id', component: ProductForm, canActivate: [authGuard] }
+    { path: 'productForm/:id', component: ProductForm, canActivate: [authGuard] },
+    { path: 'categoryList/:id', component: CategoryList, canActivate: [authGuard] },
 ];

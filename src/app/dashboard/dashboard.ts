@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Navbar } from '../navbar/navbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -18,15 +18,20 @@ export class Dashboard implements OnInit {
   users: any[] = [];
   loading = true;
 
-  totalCount = 0;
+  totalCount = 0; // total user count
   categoryCount = 0;
+  productCount = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.getUsers();
     this.getUserCount();
     this.getCategoryCount();
+    this.getProductCount();
   }
 
   // to get all users entries
@@ -36,6 +41,7 @@ export class Dashboard implements OnInit {
         next: res => {
           this.users = res;
           this.loading = false;
+          this.cdr.detectChanges();
         },
         error: err => {
           console.log(err);
@@ -56,7 +62,7 @@ export class Dashboard implements OnInit {
 
   // to get count of category
   getCategoryCount() {
-
+    
     this.http.get<{ categoryCount: number }>('http://127.0.0.1:8000/api/category/count')
     .subscribe({
       next: res => this.categoryCount = res.categoryCount,
@@ -64,6 +70,16 @@ export class Dashboard implements OnInit {
     });
   }
 
+  // to get product count
+  getProductCount() {
+    this.http.get<{ productCount: number }>('http://127.0.0.1:8000/api/product/count')
+    .subscribe({
+      next: res => this.productCount = res.productCount,
+      error: err => console.log(err)
+    });
+  }
+
+  // to get logged in user
   getLoggedInUser() {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
