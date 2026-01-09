@@ -23,7 +23,9 @@ export class ProductList {
 
   // to get all products
   getProducts() {
-    this.http.get<any[]>('http://127.0.0.1:8000/api/product')
+    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/product?role=${loggedUser.user_role}`)
       .subscribe({
         next: res => {
           this.products = res;
@@ -44,7 +46,7 @@ export class ProductList {
     this.http.delete(`http://127.0.0.1:8000/api/product/${id}`)
       .subscribe(() => {
         this.products = this.products.filter(p => p.id !== id);
-        
+        this.getProducts();
       })
   }
 

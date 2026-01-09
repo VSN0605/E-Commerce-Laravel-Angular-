@@ -31,9 +31,10 @@ export class ProductForm {
   ) {}
 
   ngOnInit() {
+     this.getCategories();
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-
+      
       if (id) {
         this.productId = +id;
         this.isEditMode = true;
@@ -43,6 +44,7 @@ export class ProductForm {
     });
   }
 
+  // to get product data in edit form
   getProductById() {
     this.http.get<any>(`http://127.0.0.1:8000/api/product/${this.productId}`)
     .subscribe(res => {
@@ -62,6 +64,24 @@ export class ProductForm {
     }
   }
 
+  //  get all categories
+  categories: any[] = [];
+  loading = true;
+  
+  getCategories() {
+    this.http.get<any>('http://127.0.0.1:8000/api/category')
+      .subscribe({
+        
+        next: res => {
+          console.log(res);
+          this.categories = res;
+          this.cdr.detectChanges(); 
+        },
+        error: err => console.log(err)
+      });
+  }
+
+  // to create and update product
   submit(form: NgForm) {
     const formData = new FormData();
     formData.append('product_name', this.product.product_name);

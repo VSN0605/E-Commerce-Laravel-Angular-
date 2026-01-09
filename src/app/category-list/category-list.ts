@@ -110,7 +110,9 @@ export class CategoryList {
 
 //  get all categories
   getCategories() {
-    this.http.get<any[]>('http://127.0.0.1:8000/api/category')
+    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/category?role=${loggedUser.user_role}`)
       .subscribe({
         next: res => {
           this.categories = res;
@@ -122,6 +124,20 @@ export class CategoryList {
           this.loading = false;
         }
       })
+  }
+
+  // to delete category
+  deleteCategory(id: number) {
+    if(!confirm('Are you sure')) return;
+
+    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+    // this.http.delete(`http://127.0.0.1:8000/api/category/${id}?users?role=${loggedUser.user_role}`)
+    this.http.delete(`http://127.0.0.1:8000/api/category/${id}`)
+    .subscribe(() => {
+      this.categories = this.categories.filter(c => c.id !== id);
+      this.getCategories();
+    })
   }
 
   // to get logged in user

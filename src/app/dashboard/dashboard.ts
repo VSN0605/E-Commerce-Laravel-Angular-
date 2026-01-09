@@ -36,7 +36,9 @@ export class Dashboard implements OnInit {
 
   // to get all users entries
   getUsers() {
-    this.http.get<any[]>('http://127.0.0.1:8000/api/users')
+    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/users?role=${loggedUser.user_role}`)
       .subscribe({
         next: res => {
           this.users = res;
