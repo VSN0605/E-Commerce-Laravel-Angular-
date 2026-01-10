@@ -41,9 +41,11 @@ export class ProductList {
 
   // to delete product
   deleteProduct(id: number) {
+    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+
     if(!confirm('Are you sure?')) return;
 
-    this.http.delete(`http://127.0.0.1:8000/api/product/${id}`)
+    this.http.delete(`http://127.0.0.1:8000/api/product/${id}?role=${loggedUser.user_role}`)
       .subscribe(() => {
         this.products = this.products.filter(p => p.id !== id);
         this.getProducts();

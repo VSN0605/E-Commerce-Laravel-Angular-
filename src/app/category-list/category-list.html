@@ -40,7 +40,7 @@
       (ngSubmit)="submit(registerForm)"
       class="text-neutral-800 py-6 relative overflow-hidden flex flex-col justify-around w-110 h-70 border border-neutral-500 rounded-lg bg-neutral-50 p-3 px-6"
     >
-      <input type="hidden" name="userRole" value="{{ userRole }}">
+      <input type="hidden" [(ngModel)]="category.created_by" name="created_by" value="{{ userRole }}">
       <div
         class="before:absolute before:w-32 before:h-20 before:right-2 before:bg-rose-300 before:-z-10 before:rounded-full before:blur-xl before:-top-12 z-10 after:absolute after:w-24 after:h-24 after:bg-purple-300 after:-z-10 after:rounded-full after:blur after:-top-12 after:-right-6"
       >

@@ -15,8 +15,9 @@ export class ProductForm {
     product_name : '',
     product_description : '',
     product_price : '',
-    product_category : '',
-    product_company : ''
+    category_id : '',
+    product_company : '',
+    created_by : '',
   };
 
   selectedFile! : File | null;
@@ -31,7 +32,8 @@ export class ProductForm {
   ) {}
 
   ngOnInit() {
-     this.getCategories();
+    this.getCategories();
+    this.product.created_by = this.userRole;
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       
@@ -51,7 +53,7 @@ export class ProductForm {
       this.product.product_name = res.product_name;
       this.product.product_description = res.product_description;
       this.product.product_price = res.product_price;
-      this.product.product_category = res.product_category;
+      this.product.category_id = res.category_id;
       this.product.product_company = res.product_company;
       this.cdr.detectChanges();
     });
@@ -69,7 +71,7 @@ export class ProductForm {
   loading = true;
   
   getCategories() {
-    this.http.get<any>('http://127.0.0.1:8000/api/category')
+    this.http.get<any>('http://127.0.0.1:8000/api/categories/dropdown')
       .subscribe({
         
         next: res => {
@@ -87,9 +89,10 @@ export class ProductForm {
     formData.append('product_name', this.product.product_name);
     formData.append('product_description', this.product.product_description);
     formData.append('product_price', this.product.product_price);
-    formData.append('product_category', this.product.product_category);
+    formData.append('category_id', this.product.category_id);
     formData.append('product_company', this.product.product_company);
-    
+    formData.append('created_by', this.product.created_by);
+
     console.log(formData);
     
      if (this.selectedFile) {
@@ -115,4 +118,13 @@ export class ProductForm {
       error: err => console.log(err)
     });
   }
+
+  // to get logged in user
+  getLoggedinUser() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+
+  user = this.getLoggedinUser();
+  userRole = this.user.user_role;
 }

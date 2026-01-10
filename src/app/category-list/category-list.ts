@@ -28,7 +28,7 @@ export class CategoryList {
   category = {
     category_name : '',
     category_details : '',
-    // created_by : '',
+    created_by : '',
   }
 
   isEditMode = false;
@@ -43,6 +43,7 @@ export class CategoryList {
 
    ngOnInit(): void {
     this.getCategories();
+    this.category.created_by = this.userRole;
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
 
@@ -76,7 +77,7 @@ export class CategoryList {
 
     formData.append('category_name', this.category.category_name);
     formData.append('category_details', this.category.category_details);
-    // formData.append('created_by', this.category.created_by);
+    formData.append('created_by', this.category.created_by);
 
     const request = this.isEditMode
     ? this.http.post(
@@ -132,8 +133,7 @@ export class CategoryList {
 
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-    // this.http.delete(`http://127.0.0.1:8000/api/category/${id}?users?role=${loggedUser.user_role}`)
-    this.http.delete(`http://127.0.0.1:8000/api/category/${id}`)
+    this.http.delete(`http://127.0.0.1:8000/api/category/${id}?role=${loggedUser.user_role}`)
     .subscribe(() => {
       this.categories = this.categories.filter(c => c.id !== id);
       this.getCategories();
