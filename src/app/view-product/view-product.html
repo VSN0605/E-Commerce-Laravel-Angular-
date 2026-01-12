@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="mt-25 flex justify-center align-center w-screen">
+<div class="mt-25 flex justify-center align-center flex-row w-full flex-wrap">
     <div class="bg-neutral-primary-soft block w-100 border border-default rounded-lg shadow-xs">
       <img class="rounded-t-base"
         class="rounded-lg w-full"
@@ -45,6 +45,12 @@
       </a>
     </div>
   </div>
+  <h4 class="w-full text-center text-green-500">Current Stock : <b>{{ product.product_quantity }}</b></h4>
+  <div class="w-full flex justify-center gap-10 p-5">
+    <button type="button" (click)="deleteProduct(product.id)" class="text-white bg-red-500 box-border border border-transparent hover:bg-warning-strong focus:ring-4 focus:ring-warning-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">DELETE</button>
+    <button type="button" (click)="editProduct(product.id)" class="text-white bg-green-500 box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">EDIT</button>
+    <button type="button" class="text-heading bg-yellow-500 box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">ADD STOCK</button>
+  </div>
 </div>
-
+ 
 <router-outlet></router-outlet>

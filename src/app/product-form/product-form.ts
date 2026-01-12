@@ -17,6 +17,7 @@ export class ProductForm {
     product_price : '',
     category_id : '',
     product_company : '',
+    product_quantity : '',
     created_by : '',
   };
 
@@ -55,6 +56,7 @@ export class ProductForm {
       this.product.product_price = res.product_price;
       this.product.category_id = res.category_id;
       this.product.product_company = res.product_company;
+      this.product.product_quantity = res.product_quantity;
       this.cdr.detectChanges();
     });
     
@@ -90,6 +92,7 @@ export class ProductForm {
     formData.append('product_description', this.product.product_description);
     formData.append('product_price', this.product.product_price);
     formData.append('category_id', this.product.category_id);
+    formData.append('product_quantity', this.product.product_quantity);
     formData.append('product_company', this.product.product_company);
     formData.append('created_by', this.product.created_by);
 

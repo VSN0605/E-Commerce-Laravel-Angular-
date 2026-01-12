@@ -34,7 +34,7 @@ export class ProductList {
   // to get all products
   getProducts() {
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
-
+   
     this.http.get<any[]>(`http://127.0.0.1:8000/api/product?role=${loggedUser.user_role}`)
       .subscribe({
         next: res => {
