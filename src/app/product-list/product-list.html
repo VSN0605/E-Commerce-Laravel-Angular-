@@ -2,8 +2,43 @@
 
 <div class="p-5 mt-12">
   <div class="w-full p-5 flex justify-between">
+    <h2 class="text-3xl font-bold">Product List</h2>
+
+    <div class="flex justify-between gap-5">
+    <!-- filter dropdown start -->
+    <button
+      (click)="toggleDropdown()"
+      class="inline-flex items-center rounded-lg justify-center text-white bg-gray-500 rounded-base text-sm px-4 py-2.5"
+    >
+      CATEGORIES
+      <svg class="w-4 h-4 ms-1.5" viewBox="0 0 24 24" fill="none">
+        <path stroke="currentColor" stroke-width="2" d="m19 9-7 7-7-7" />
+      </svg>
+    </button>
+
+    <div
+      *ngIf="showDropdown"
+      class="absolute z-10 mt-14 bg-white border rounded-base shadow-lg w-33"
+    >
+      <ul class="p-2 text-sm text-black font-medium">
+        <button
+          class="block w-full text-left p-2 font-semibold hover:bg-gray-200"
+          (click)="filteredProducts = products"
+        >
+          All Categories
+        </button>
+        
+        @for (category of categories; track category) {
+          <li>
+            <button (click)="filterByCategory(category.id)" class="block text-left p-2  hover:bg-gray-200 rounded">{{ category.category_name }}</button>
+          </li>
+        }
+        
+      </ul>
+    </div>
+    <!-- filter dropdown end -->
+
     <!-- button to add new category -->
-     <h2 class="text-3xl font-bold">Product List</h2>
     <a routerLink="/productForm">
       <button
         class="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-base uppercase text-black rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden"
@@ -28,16 +63,16 @@
         ></span>
       </button>
     </a>
+    </div>
   </div>
-
-  
 
   <div
     class="rounded relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default"
   >
-    <table 
-    *ngIf="!loading && products.length > 0"
-    class="w-full text-sm text-left rtl:text-right text-body">
+    <table
+      *ngIf="!loading && products.length > 0"
+      class="w-full text-sm text-left rtl:text-right text-body"
+    >
       <thead
         class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default"
       >
@@ -46,35 +81,46 @@
           <th scope="col" class="px-6 py-3 font-medium">Product Description</th>
           <th scope="col" class="px-6 py-3 font-medium">Product Price</th>
           <th scope="col" class="px-6 py-3 font-medium">Product Image</th>
+          <th scope="col" class="px-6 py-3 font-medium">Product Quantity</th>
           <th scope="col" class="px-6 py-3 font-medium">Product Category</th>
           <th scope="col" class="px-6 py-3 font-medium">Product Company</th>
           <th scope="col" class="px-6 py-3 font-medium text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr 
-        *ngFor="let product of products"
-        class="bg-neutral-primary border-b border-default">
+        <!-- <tr *ngFor="let product of products" class="bg-neutral-primary border-b border-default"> -->
+          @for (product of filteredProducts; track product.id){
+          <tr  class="bg-neutral-primary border-b border-default">
           <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
             {{ product.product_name }}
           </th>
           <td class="px-6 py-4">{{ product.product_description }}</td>
           <td class="px-6 py-4">{{ product.product_price }}</td>
           <td class="px-6 py-4">
-            <img *ngIf="product.product_image"
-            [src]="'http://127.0.0.1:8000/images/' + product.product_image"
-            width="50" />
+            <img
+              *ngIf="product.product_image"
+              [src]="'http://127.0.0.1:8000/images/' + product.product_image"
+              width="50"
+            />
           </td>
+          <td class="px-6 py-4">5</td>
           <td class="px-6 py-4">{{ product.product_category }}</td>
           <td class="px-6 py-4">{{ product.product_company }}</td>
-          <td class="px-6 py-4 flex row justify-around">
+          <td class="px-6 py-4 flex row justify-around gap-5">
+            <button
+              (click)="viewProduct(product.id)"
+              class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-blue-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
+            >
+              VIEW
+            </button>
+            
             <button
               (click)="editProduct(product.id)"
               class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-green-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
             >
               EDIT
             </button>
-           
+
             <button
               (click)="deleteProduct(product.id)"
               class="inline-block cursor-pointer items-center justify-center rounded-xl border-zinc-600 bg-red-500 px-5 py-3 font-medium text-slate-200 shadow-md transition-all duration-300 hover:shadow-xl"
@@ -83,7 +129,7 @@
             </button>
           </td>
         </tr>
-        
+      }
       </tbody>
     </table>
   </div>

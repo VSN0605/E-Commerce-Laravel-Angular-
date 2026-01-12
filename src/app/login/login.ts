@@ -33,6 +33,7 @@ export class Login {
         this.router.navigate(['/dashboard']);
       },
       error: err => {
+        alert('Email ID or Password is Wrong, Please check and Try Again');
         this.error = err.error.message || 'Login failed';
       }
     });
