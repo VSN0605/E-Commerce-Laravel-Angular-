@@ -1,11 +1,63 @@
 <app-navbar></app-navbar>
 
+@if(showPopupDiv){
+
+<dialog  class="z-5 h-screen w-full bg-transparent flex justify-center backdrop-blur-xs" #myDialog>
+  <form
+    (ngSubmit)="submitStock(product.id)"
+    class="text-neutral-800 py-6 relative overflow-hidden flex flex-col justify-around w-110 h-70 border border-neutral-500 rounded-lg bg-neutral-50 p-3 px-6"
+  >
+   
+    <div
+      class="before:absolute before:w-32 before:h-20 before:right-2 before:bg-rose-300 before:-z-10 before:rounded-full before:blur-xl before:-top-12 z-10 after:absolute after:w-24 after:h-24 after:bg-purple-300 after:-z-10 after:rounded-full after:blur after:-top-12 after:-right-6"
+    >
+      <span class="font-extrabold text-2xl text-violet-600">{{ stockAction === 'add' ? 'ADD Stock Quantity' : 'REMOVE Stock Quantity' }}</span>
+      <p class="text-neutral-700">{{ stockAction === 'add' ? 'Add Stock Here' : 'Remove Stock Here' }}</p>
+    </div>
+
+    <div class="flex flex-col gap-4 mt-4">
+      <div
+        class="relative rounded-lg w-full overflow-hidden before:absolute before:w-12 before:h-12 before:right-0 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content[''] after:bg-rose-300 after:right-12 after:top-3 after:rounded-full after:blur-lg"
+      >
+        <input
+          type="number"
+          [(ngModel)]="product_quantity"
+          name="product_quantity"
+          min="1"
+          class="relative bg-transparent ring-0 outline-none border border-neutral-500 text-neutral-900 placeholder-violet-700 text-sm rounded-lg focus:ring-violet-500 placeholder-opacity-60 focus:border-violet-500 block w-full p-2.5"
+          placeholder="Add Quantity"
+        />
+      </div>
+      
+      <div class="flex justify-end gap-2">
+        <button
+          type="submit"
+          class="bg-violet-500 text-neutral-50 px-4 py-2 rounded-lg hover:bg-violet-400 transition"
+        >
+          {{ stockAction === 'add' ? 'ADD STOCK' : 'REMOVE STOCK' }}
+        </button>
+
+        <button
+          type="button"
+          (click)="hidePopup()"
+          class="bg-gray-400 text-neutral-50 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+}
+
 <div class="mt-25 flex justify-center align-center flex-row w-full flex-wrap">
-    <div class="bg-neutral-primary-soft block w-100 border border-default rounded-lg shadow-xs">
-      <img class="rounded-t-base"
-        class="rounded-lg w-full"
-        [src]="'http://127.0.0.1:8000/images/' + product.product_image"
-      />
+  <div class="bg-neutral-primary-soft block w-100 border border-default rounded-lg shadow-xs">
+    <img
+      class="rounded-t-base"
+      class="rounded-lg w-full"
+      [src]="'http://127.0.0.1:8000/images/' + product.product_image"
+    />
     <div class="p-6 text-center">
       <span
         class="inline-flex items-center bg-brand-softer border border-brand-subtle text-fg-brand-strong text-xs font-medium px-1.5 py-0.5 rounded-sm"
@@ -29,28 +81,55 @@
         </svg>
         Trending
       </span>
-        <h3 class="mt-3 mb-6 text-2xl font-semibold tracking-tight text-heading">
-          {{ product.product_name }} ({{  product?.category?.category_name }})
-        </h3>
-        <h4 class="text-xl font-semibold text-heading">{{ product.product_company }}</h4>
-        <p class="mt-3 mb-6 tracking-tight ">
-            {{ product.product_description }}
-        </p>
+      <h3 class="mt-3 mb-6 text-2xl font-semibold tracking-tight text-heading">
+        {{ product.product_name }} ({{ product?.category?.category_name }})
+      </h3>
+      <h4 class="text-xl font-semibold text-heading">{{ product.product_company }}</h4>
+      <p class="mt-3 mb-6 tracking-tight">
+        {{ product.product_description }}
+      </p>
       <a
         routerLink="/productList"
         class="inline-flex items-center text-white bg-blue-500 box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none"
       >
         Back To List
-        
       </a>
     </div>
   </div>
-  <h4 class="w-full text-center text-green-500">Current Stock : <b>{{ product.product_quantity }}</b></h4>
+  <h4 class="w-full text-center text-green-500">
+    Current Stock : <b>{{ product.product_quantity }}</b>
+  </h4>
   <div class="w-full flex justify-center gap-10 p-5">
-    <button type="button" (click)="deleteProduct(product.id)" class="text-white bg-red-500 box-border border border-transparent hover:bg-warning-strong focus:ring-4 focus:ring-warning-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">DELETE</button>
-    <button type="button" (click)="editProduct(product.id)" class="text-white bg-green-500 box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">EDIT</button>
-    <button type="button" class="text-heading bg-yellow-500 box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">ADD STOCK</button>
+    <button
+      type="button"
+      (click)="deleteProduct(product.id)"
+      class="cursor-pointer text-white bg-red-500 box-border border border-transparent hover:bg-warning-strong focus:ring-4 focus:ring-warning-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+    >
+      DELETE
+    </button>
+    <button
+      type="button"
+      (click)="editProduct(product.id)"
+      class="cursor-pointer text-white bg-green-500 box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+    >
+      EDIT
+    </button>
+    <button
+      type="button"
+      (click)="openPopup('add')"
+      class="cursor-pointer text-heading bg-yellow-500 box-border text-white border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+    >
+      ADD STOCK
+    </button>
+
+    <button
+      type="button"
+      (click)="openPopup('remove')"
+      class="cursor-pointer text-heading bg-yellow-500 box-border text-white border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+    >
+      REMOVE STOCK
+    </button>
   </div>
 </div>
- 
+
 <router-outlet></router-outlet>

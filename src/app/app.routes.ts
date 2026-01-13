@@ -8,6 +8,7 @@ import { CategoryList } from './category-list/category-list';
 import { ProductList } from './product-list/product-list';
 import { ProductForm } from './product-form/product-form';
 import { ViewProduct } from './view-product/view-product';
+import { Profile } from './profile/profile';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -20,4 +21,5 @@ export const routes: Routes = [
     { path: 'productForm/:id', component: ProductForm, canActivate: [authGuard] },
     { path: 'categoryList/:id', component: CategoryList, canActivate: [authGuard] },
     { path: 'productList/viewProduct/:id', component: ViewProduct, canActivate: [authGuard] },
+    { path: 'profile', component: Profile, canActivate: [authGuard] },
 ];

@@ -57,7 +57,11 @@ export class Dashboard implements OnInit {
     this.http
       .get<{ count: number }>('http://127.0.0.1:8000/api/users/count')
       .subscribe({
-        next: res => this.totalCount = res.count,
+        next: res =>{
+          this.totalCount = res.count;
+          this.cdr.detectChanges();
+        }, 
+        
         error: err => console.log(err)
       });
   }
@@ -67,7 +71,10 @@ export class Dashboard implements OnInit {
     
     this.http.get<{ categoryCount: number }>('http://127.0.0.1:8000/api/category/count')
     .subscribe({
-      next: res => this.categoryCount = res.categoryCount,
+      next: res => {
+        this.categoryCount = res.categoryCount;
+        this.cdr.detectChanges();
+      },
       error: err => console.log(err)
     });
   }
@@ -76,7 +83,10 @@ export class Dashboard implements OnInit {
   getProductCount() {
     this.http.get<{ productCount: number }>('http://127.0.0.1:8000/api/product/count')
     .subscribe({
-      next: res => this.productCount = res.productCount,
+      next: res => {
+        this.productCount = res.productCount;
+        this.cdr.detectChanges();
+      },
       error: err => console.log(err)
     });
   }

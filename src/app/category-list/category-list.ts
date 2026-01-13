@@ -66,7 +66,6 @@ export class CategoryList {
     .subscribe(res => {
       this.category.category_name = res.category_name;
       this.category.category_details = res.category_details;
-      // this.category.created_by = res.category.created_by;
       this.cdr.detectChanges();
     })
   }
@@ -128,17 +127,37 @@ export class CategoryList {
   }
 
   // to delete category
+  // deleteCategory(id: number) {
+  //   if(!confirm('Are you sure')) return;
+
+  //   const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+  //   this.http.delete(`http://127.0.0.1:8000/api/category/${id}?role=${loggedUser.user_role}`)
+  //   .subscribe(() => {
+  //     this.categories = this.categories.filter(c => c.id !== id);
+  //     this.getCategories();
+  //   })
+  // }
+
   deleteCategory(id: number) {
-    if(!confirm('Are you sure')) return;
+    if (!confirm('Are you sure')) return;
 
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-    this.http.delete(`http://127.0.0.1:8000/api/category/${id}?role=${loggedUser.user_role}`)
-    .subscribe(() => {
-      this.categories = this.categories.filter(c => c.id !== id);
-      this.getCategories();
-    })
+    this.http
+      .delete(`http://127.0.0.1:8000/api/category/${id}?role=${loggedUser.user_role}`)
+      .subscribe({
+        next: () => {
+          this.categories = this.categories.filter(c => c.id !== id);
+          this.getCategories();
+        },
+        error: (err) => {
+          alert('Something went wrong while deleting category');
+          console.error(err);
+        }
+      });
   }
+
 
   // to get logged in user
   getLoggedinUser() {

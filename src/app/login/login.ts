@@ -27,9 +27,7 @@ export class Login {
     this.http.post<any>('http://127.0.0.1:8000/api/login', this.user).subscribe({
       next: res => {
         localStorage.setItem('user', JSON.stringify(res.user));
-
         form.resetForm();
-
         this.router.navigate(['/dashboard']);
       },
       error: err => {
