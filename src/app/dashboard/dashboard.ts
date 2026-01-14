@@ -3,7 +3,6 @@ import { Navbar } from '../navbar/navbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { empty } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,9 +35,13 @@ export class Dashboard implements OnInit {
 
   // to get all users entries
   getUsers() {
-    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
 
-    this.http.get<any[]>(`http://127.0.0.1:8000/api/users?role=${loggedUser.user_role}`)
+    this.http.get<any[]>('http://127.0.0.1:8000/api/users', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .subscribe({
         next: res => {
           this.users = res;
@@ -54,8 +57,14 @@ export class Dashboard implements OnInit {
 
   // to get count of users
   getUserCount() {
+    const token = localStorage.getItem('token');
+
     this.http
-      .get<{ count: number }>('http://127.0.0.1:8000/api/users/count')
+      .get<{ count: number }>('http://127.0.0.1:8000/api/users/count', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .subscribe({
         next: res =>{
           this.totalCount = res.count;
@@ -68,8 +77,13 @@ export class Dashboard implements OnInit {
 
   // to get count of category
   getCategoryCount() {
-    
-    this.http.get<{ categoryCount: number }>('http://127.0.0.1:8000/api/category/count')
+    const token = localStorage.getItem('token');
+
+    this.http.get<{ categoryCount: number }>('http://127.0.0.1:8000/api/category/count', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
     .subscribe({
       next: res => {
         this.categoryCount = res.categoryCount;
@@ -81,7 +95,13 @@ export class Dashboard implements OnInit {
 
   // to get product count
   getProductCount() {
-    this.http.get<{ productCount: number }>('http://127.0.0.1:8000/api/product/count')
+    const token = localStorage.getItem('token');
+
+    this.http.get<{ productCount: number }>('http://127.0.0.1:8000/api/product/count', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
     .subscribe({
       next: res => {
         this.productCount = res.productCount;
@@ -99,6 +119,4 @@ export class Dashboard implements OnInit {
 
   user = this.getLoggedInUser();
   UserName = this.user.user_name;
-  // console.log(user.user_name);
-  // console.log(user.user_role);
 }

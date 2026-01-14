@@ -18,7 +18,6 @@ export class ProductForm {
     category_id : '',
     product_company : '',
     product_quantity : '',
-    created_by : '',
   };
 
   selectedFile! : File | null;
@@ -34,7 +33,7 @@ export class ProductForm {
 
   ngOnInit() {
     this.getCategories();
-    this.product.created_by = this.userRole;
+    // this.product.created_by = this.userRole;
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       
@@ -42,14 +41,19 @@ export class ProductForm {
         this.productId = +id;
         this.isEditMode = true;
         this.getProductById();
-        
       }
     });
   }
 
   // to get product data in edit form
   getProductById() {
-    this.http.get<any>(`http://127.0.0.1:8000/api/product/${this.productId}`)
+    const token = localStorage.getItem('token');
+
+    this.http.get<any>(`http://127.0.0.1:8000/api/product/${this.productId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
     .subscribe(res => {
       this.product.product_name = res.product_name;
       this.product.product_description = res.product_description;
@@ -73,7 +77,13 @@ export class ProductForm {
   loading = true;
   
   getCategories() {
-    this.http.get<any>('http://127.0.0.1:8000/api/categories/dropdown')
+    const token = localStorage.getItem('token');
+    
+    this.http.get<any>('http://127.0.0.1:8000/api/categories/dropdown', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .subscribe({
         
         next: res => {
@@ -87,6 +97,8 @@ export class ProductForm {
 
   // to create and update product
   submit(form: NgForm) {
+    const token = localStorage.getItem('token');
+
     const formData = new FormData();
     formData.append('product_name', this.product.product_name);
     formData.append('product_description', this.product.product_description);
@@ -94,9 +106,12 @@ export class ProductForm {
     formData.append('category_id', this.product.category_id);
     formData.append('product_quantity', this.product.product_quantity);
     formData.append('product_company', this.product.product_company);
-    formData.append('created_by', this.product.created_by);
 
     console.log(formData);
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
     
      if (this.selectedFile) {
       formData.append('product_image', this.selectedFile);
@@ -106,11 +121,11 @@ export class ProductForm {
     const request = this.isEditMode
     ? this.http.post(
         `http://127.0.0.1:8000/api/product/${this.productId}?_method=PUT`,
-        formData
+        formData, { headers }
       )
     : this.http.post(
         'http://127.0.0.1:8000/api/product',
-        formData
+        formData, { headers }
       );
 
     request.subscribe({

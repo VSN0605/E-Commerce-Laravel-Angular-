@@ -16,20 +16,27 @@ export class Navbar {
   logout() {
     if (!confirm('Are you sure')) return;
 
-    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
 
     const url =
-      `http://127.0.0.1:8000/api/user/logout` +
-      `?role=${loggedUser.user_role}&user_name=${loggedUser.user_name}`;
+      'http://127.0.0.1:8000/api/user/logout';
 
-    this.http.post(url, {}).subscribe({
+    this.http.post(url, {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    ).subscribe({
       next: () => {
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
         this.router.navigate(['/']);
       },
       error: (err) => {
         console.error(err);
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
         this.router.navigate(['/']);
       },
     });

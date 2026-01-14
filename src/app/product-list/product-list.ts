@@ -4,6 +4,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Token } from '@angular/compiler';
 
 @Component({
   selector: 'app-product-list',
@@ -33,9 +34,13 @@ export class ProductList {
 
   // to get all products
   getProducts() {
-    const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
    
-    this.http.get<any[]>(`http://127.0.0.1:8000/api/product?role=${loggedUser.user_role}`)
+    this.http.get<any[]>('http://127.0.0.1:8000/api/product', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .subscribe({
         next: res => {
           this.products = res;
@@ -60,10 +65,15 @@ export class ProductList {
   // to delete product
   deleteProduct(id: number) {
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
-
+    const token = localStorage.getItem('token');
+    
     if(!confirm('Are you sure?')) return;
 
-    this.http.delete(`http://127.0.0.1:8000/api/product/${id}?role=${loggedUser.user_role}`)
+    this.http.delete(`http://127.0.0.1:8000/api/product/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .subscribe(() => {
         this.products = this.products.filter(p => p.id !== id);
         this.getProducts();
@@ -82,10 +92,15 @@ export class ProductList {
 
   // to get all categoies in dropdown list
   categories: any[] = [];
-  // loading = true;
 
   getCategories() {
-    this.http.get<any>('http://127.0.0.1:8000/api/categories/dropdown')
+    const token = localStorage.getItem('token');
+
+    this.http.get<any>('http://127.0.0.1:8000/api/categories/dropdown', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .subscribe({
         
         next: res => {

@@ -28,9 +28,14 @@ export class Profile {
   getUser() {
 
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
 
     this.http
-      .get<any>(`http://127.0.0.1:8000/api/user/user-profile/${loggedUser.id}`)
+      .get<any>(`http://127.0.0.1:8000/api/user/user-profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .subscribe({
         next: res => {
           this.user = res;

@@ -28,7 +28,6 @@ export class CategoryList {
   category = {
     category_name : '',
     category_details : '',
-    created_by : '',
   }
 
   isEditMode = false;
@@ -43,7 +42,6 @@ export class CategoryList {
 
    ngOnInit(): void {
     this.getCategories();
-    this.category.created_by = this.userRole;
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
 
@@ -62,7 +60,13 @@ export class CategoryList {
 
   // to get category in form by id
   getCategoryById() {
-    this.http.get<any>(`http://127.0.0.1:8000/api/category/${this.categoryId}`)
+    const token = localStorage.getItem('token');
+
+    this.http.get<any>(`http://127.0.0.1:8000/api/category/${this.categoryId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
     .subscribe(res => {
       this.category.category_name = res.category_name;
       this.category.category_details = res.category_details;
@@ -74,18 +78,23 @@ export class CategoryList {
   submit(form: NgForm) {
     const formData = new FormData();
 
+    const token = localStorage.getItem('token');
+
     formData.append('category_name', this.category.category_name);
     formData.append('category_details', this.category.category_details);
-    formData.append('created_by', this.category.created_by);
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
 
     const request = this.isEditMode
     ? this.http.post(
         `http://127.0.0.1:8000/api/category/${this.categoryId}?_method=PUT`,
-        formData
+        formData, { headers }
       )
     : this.http.post(
           'http://127.0.0.1:8000/api/category',
-          formData
+          formData, { headers }
       );
 
     request.subscribe({
@@ -111,8 +120,13 @@ export class CategoryList {
 //  get all categories
   getCategories() {
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
 
-    this.http.get<any[]>(`http://127.0.0.1:8000/api/category?role=${loggedUser.user_role}`)
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/category?role=${loggedUser.user_role}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .subscribe({
         next: res => {
           this.categories = res;
@@ -127,25 +141,18 @@ export class CategoryList {
   }
 
   // to delete category
-  // deleteCategory(id: number) {
-  //   if(!confirm('Are you sure')) return;
-
-  //   const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
-
-  //   this.http.delete(`http://127.0.0.1:8000/api/category/${id}?role=${loggedUser.user_role}`)
-  //   .subscribe(() => {
-  //     this.categories = this.categories.filter(c => c.id !== id);
-  //     this.getCategories();
-  //   })
-  // }
-
   deleteCategory(id: number) {
     if (!confirm('Are you sure')) return;
 
+    const token = localStorage.getItem('token');
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
 
     this.http
-      .delete(`http://127.0.0.1:8000/api/category/${id}?role=${loggedUser.user_role}`)
+      .delete(`http://127.0.0.1:8000/api/category/${id}?role=${loggedUser.user_role}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .subscribe({
         next: () => {
           this.categories = this.categories.filter(c => c.id !== id);

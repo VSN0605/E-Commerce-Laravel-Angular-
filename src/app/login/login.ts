@@ -26,6 +26,7 @@ export class Login {
   login(form: NgForm) {
     this.http.post<any>('http://127.0.0.1:8000/api/login', this.user).subscribe({
       next: res => {
+        localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));
         form.resetForm();
         this.router.navigate(['/dashboard']);
@@ -36,4 +37,6 @@ export class Login {
       }
     });
   }
+
+
 }

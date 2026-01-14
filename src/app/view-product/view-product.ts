@@ -55,10 +55,15 @@ export class ViewProduct {
   // to delete product
   deleteProduct(id: number) {
     const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
 
     if(!confirm('Are you sure?')) return;
 
-    this.http.delete(`http://127.0.0.1:8000/api/product/${id}?role=${loggedUser.user_role}`)
+    this.http.delete(`http://127.0.0.1:8000/api/product/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .subscribe(() => {
         this.products = this.products.filter(p => p.id !== id);
       })
@@ -73,36 +78,45 @@ export class ViewProduct {
     return;
   }
 
+  const token = localStorage.getItem('token');
   const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
 
   const url =
     this.stockAction === 'add'
-      ? `http://127.0.0.1:8000/api/product/${id}/add-stock?role=${loggedUser.user_role}`
-      : `http://127.0.0.1:8000/api/product/${id}/remove-stock?role=${loggedUser.user_role}`;
+      ? `http://127.0.0.1:8000/api/product/${id}/add-stock`
+      : `http://127.0.0.1:8000/api/product/${id}/remove-stock`;
 
   this.http.post(url, {
     product_quantity: this.product_quantity
-  }).subscribe({
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+  ).subscribe({
     next: () => {
       alert('Stock updated successfully');
-      // this.showPopupDiv = false;
       window.location.reload();
-      // this.cdr.detectChanges();
     },
     error: (err) => {
       alert(err.error?.message || 'Failed to update stock');
       console.error(err);
-      // this.showPopupDiv = false;
       window.location.reload();
-      // this.cdr.detectChanges();
     }
   });
 }
 
   // to get the product detail
   getProductById() {
+    const token = localStorage.getItem('token');
+
     this.http
-      .get<any>(`http://127.0.0.1:8000/api/product/product-detail/${this.productId}`)
+      .get<any>(`http://127.0.0.1:8000/api/product/product-detail/${this.productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .subscribe({
         next: res => {
           this.product = res;
